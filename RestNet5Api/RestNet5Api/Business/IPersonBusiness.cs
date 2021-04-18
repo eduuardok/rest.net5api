@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using RestNet5Api.Model;
 
-namespace RestNet5Api.Services
+namespace RestNet5Api.Business
 {
-    public interface IPersonService
+    public interface IPersonBusiness
     {
          Person Create(Person person);
          Person FindByID(long id);
