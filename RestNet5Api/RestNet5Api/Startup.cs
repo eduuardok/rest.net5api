@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using RestNet5Api.Services;
+using RestNet5Api.Services.Implementations;
 
 namespace RestNet5Api
 {
@@ -28,6 +30,8 @@ namespace RestNet5Api
         {
 
             services.AddControllers();
+            services.AddScoped<IPersonService, PersonServiceImplementation>();
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "RestNet5Api", Version = "v1" });
