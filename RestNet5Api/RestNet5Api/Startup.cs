@@ -39,7 +39,6 @@ namespace RestNet5Api
 
             services.AddControllers();
             services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
-
             services.AddScoped<IBookBusiness, BookBusinessImplementation>();
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 
