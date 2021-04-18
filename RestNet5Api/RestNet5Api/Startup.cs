@@ -9,11 +9,11 @@ using Microsoft.OpenApi.Models;
 using RestNet5Api.Model.Context;
 using RestNet5Api.Business;
 using RestNet5Api.Business.Implementations;
-using RestNet5Api.Repository.Implementations;
 using RestNet5Api.Repository;
 using Serilog;
 using MySqlConnector;
 using System.Collections.Generic;
+using RestNet5Api.Repository.Generic;
 
 namespace RestNet5Api
 {
@@ -39,10 +39,9 @@ namespace RestNet5Api
 
             services.AddControllers();
             services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
-            services.AddScoped<IPersonRepository, PersonRepositoryImplementation>();
 
             services.AddScoped<IBookBusiness, BookBusinessImplementation>();
-            services.AddScoped<IBookRepository, BookRepositoryImplementation>();
+            services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 
             services.AddDbContext<MySqlContext>(options => options.UseMySql(Configuration.GetConnectionString("MySQLConnection"), new MySqlServerVersion(new Version(5,7))));
             
