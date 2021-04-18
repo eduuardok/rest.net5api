@@ -11,25 +11,38 @@ using RestNet5Api.Business;
 using RestNet5Api.Business.Implementations;
 using RestNet5Api.Repository.Implementations;
 using RestNet5Api.Repository;
+using Serilog;
+using MySqlConnector;
+using System.Collections.Generic;
 
 namespace RestNet5Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public IWebHostEnvironment Environment {get;}
+        public IConfiguration Configuration { get; }
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
-        }
+            Environment = environment;
 
-        public IConfiguration Configuration { get; }
+            Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // if(Environment.IsDevelopment()){
+            //     MigrateDatabase(Configuration.GetConnectionString("MySQLConnection"));
+            // }
+                
 
             services.AddControllers();
             services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
             services.AddScoped<IPersonRepository, PersonRepositoryImplementation>();
+
+            services.AddScoped<IBookBusiness, BookBusinessImplementation>();
+            services.AddScoped<IBookRepository, BookRepositoryImplementation>();
 
             services.AddDbContext<MySqlContext>(options => options.UseMySql(Configuration.GetConnectionString("MySQLConnection"), new MySqlServerVersion(new Version(5,7))));
             
@@ -61,5 +74,19 @@ namespace RestNet5Api
                 endpoints.MapControllers();
             });
         }
+        private void MigrateDatabase(string connection)
+        {
+            try {
+                var evolveConnection = new MySqlConnection(connection);
+                var evolve = new Evolve.Evolve(evolveConnection, msg => Log.Information(msg)) {
+                    Locations = new List<string> {"db/migrations", "db/dataset"},
+                    IsEraseDisabled = true,
+                };
+                evolve.Migrate();
+            } catch (Exception ex){
+                Log.Error("Database migration failed: " + ex);
+            }
+        }
     }
+    
 }
