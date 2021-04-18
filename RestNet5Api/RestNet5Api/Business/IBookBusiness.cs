@@ -1,14 +1,14 @@
 using System.Collections.Generic;
-using RestNet5Api.Model;
+using RestNet5Api.Data.VO;
 
 namespace RestNet5Api.Business
 {
     public interface IBookBusiness
     {
-         Book Create(Book book);
-         Book FindByID(long id);
-         Book Update(Book book);
+         BookVO Create(BookVO book);
+         BookVO FindByID(long id);
+         BookVO Update(BookVO book);
          void Delete(long id);
-         List<Book> FindAll();
+         List<BookVO> FindAll();
     }
 }

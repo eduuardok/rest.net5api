@@ -1,14 +1,14 @@
 using System.Collections.Generic;
-using RestNet5Api.Model;
+using RestNet5Api.Data.VO;
 
 namespace RestNet5Api.Business
 {
     public interface IPersonBusiness
     {
-         Person Create(Person person);
-         Person FindByID(long id);
-         Person Update(Person person);
+         PersonVO Create(PersonVO person);
+         PersonVO FindByID(long id);
+         PersonVO Update(PersonVO person);
          void Delete(long id);
-         List<Person> FindAll();
+         List<PersonVO> FindAll();
     }
 }
