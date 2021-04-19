@@ -15,6 +15,8 @@ using MySqlConnector;
 using System.Collections.Generic;
 using RestNet5Api.Repository.Generic;
 using Microsoft.Net.Http.Headers;
+using RestNet5Api.Hypermedia.Filters;
+using RestNet5Api.Hypermedia.Enricher;
 
 namespace RestNet5Api
 {
@@ -51,6 +53,11 @@ namespace RestNet5Api
                options.FormatterMappings.SetMediaTypeMappingForFormat("json", MediaTypeHeaderValue.Parse("application/json"));
             }).AddXmlSerializerFormatters();
 
+            var filterOptions = new HyperMediaFilterOptions();
+            filterOptions.ContentResponseEnricherList.Add(new PersonEnricher());
+
+            services.AddSingleton(filterOptions);
+
             services.AddApiVersioning();
             services.AddSwaggerGen(c =>
             {
@@ -77,6 +84,7 @@ namespace RestNet5Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapControllerRoute("DefaultApi", "{controller=values}/{id?}");
             });
         }
         private void MigrateDatabase(string connection)

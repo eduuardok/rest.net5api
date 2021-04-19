@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using RestNet5Api.Model;
 using RestNet5Api.Business;
 using RestNet5Api.Data.VO;
+using RestNet5Api.Hypermedia.Filters;
 
 namespace RestNet5Api.Controllers
 {
@@ -22,6 +23,7 @@ namespace RestNet5Api.Controllers
         }
         
         [HttpGet]
+        [TypeFilter(typeof(HyperMediaFilter))]
         public IActionResult GetAll(){
 
             return Ok(_BookBusiness.FindAll());
@@ -29,6 +31,7 @@ namespace RestNet5Api.Controllers
         }
 
         [HttpGet("{id}")]
+        [TypeFilter(typeof(HyperMediaFilter))]
         public IActionResult GetByID(long id){
 
             var book = _BookBusiness.FindByID(id);
@@ -41,6 +44,7 @@ namespace RestNet5Api.Controllers
         }
 
         [HttpPost]
+        [TypeFilter(typeof(HyperMediaFilter))]
         public IActionResult Post([FromBody] BookVO book){
 
             if(book == null)
@@ -50,6 +54,7 @@ namespace RestNet5Api.Controllers
         }
 
         [HttpPut]
+        [TypeFilter(typeof(HyperMediaFilter))]
         public IActionResult Put([FromBody] BookVO book){
 
             if(book == null)
