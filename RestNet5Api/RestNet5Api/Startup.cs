@@ -14,6 +14,7 @@ using Serilog;
 using MySqlConnector;
 using System.Collections.Generic;
 using RestNet5Api.Repository.Generic;
+using Microsoft.Net.Http.Headers;
 
 namespace RestNet5Api
 {
@@ -44,6 +45,12 @@ namespace RestNet5Api
 
             services.AddDbContext<MySqlContext>(options => options.UseMySql(Configuration.GetConnectionString("MySQLConnection"), new MySqlServerVersion(new Version(5,7))));
             
+            services.AddMvc(options => {
+               options.RespectBrowserAcceptHeader = true;
+               options.FormatterMappings.SetMediaTypeMappingForFormat("xml", MediaTypeHeaderValue.Parse("application/xml")); 
+               options.FormatterMappings.SetMediaTypeMappingForFormat("json", MediaTypeHeaderValue.Parse("application/json"));
+            }).AddXmlSerializerFormatters();
+
             services.AddApiVersioning();
             services.AddSwaggerGen(c =>
             {

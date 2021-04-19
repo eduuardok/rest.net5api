@@ -18,8 +18,7 @@ namespace RestNet5Api.Data.Converter.Implementations
                 Author = origin.Author,
                 LaunchDate = origin.LaunchDate,
                 Price = origin.Price,
-                Title = origin.Title,
-                AuthorAndTitle = origin.Author + ": " + origin.Title
+                Title = origin.Title
             };
         }
 

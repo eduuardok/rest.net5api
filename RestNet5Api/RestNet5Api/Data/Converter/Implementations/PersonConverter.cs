@@ -18,8 +18,7 @@ namespace RestNet5Api.Data.Converter.Implementations
                 FirstName = origin.FirstName,
                 LastName = origin.LastName,
                 Address = origin.Address,
-                Gender = origin.Gender,
-                CompleteName = string.Concat(origin.FirstName, " ",  origin.LastName)
+                Gender = origin.Gender
             };
         }
 

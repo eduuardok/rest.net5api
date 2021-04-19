@@ -9,6 +9,5 @@ namespace RestNet5Api.Data.VO
         public DateTime LaunchDate { get; set; }
         public decimal Price { get; set; }
         public string Title { get; set; }
-        public string AuthorAndTitle { get; set; }
     }
 }
