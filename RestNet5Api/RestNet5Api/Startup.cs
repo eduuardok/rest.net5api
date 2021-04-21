@@ -55,6 +55,7 @@ namespace RestNet5Api
 
             var filterOptions = new HyperMediaFilterOptions();
             filterOptions.ContentResponseEnricherList.Add(new PersonEnricher());
+            filterOptions.ContentResponseEnricherList.Add(new BookEnricher());
 
             services.AddSingleton(filterOptions);
 

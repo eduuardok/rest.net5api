@@ -11,7 +11,7 @@ namespace RestNet5Api.Hypermedia.Enricher
         private readonly object _lock = new object();
         protected override Task EnrichModel(PersonVO content, IUrlHelper urlHelper)
         {
-            var path = "api/pessoa/v1";
+            var path = "v1/pessoa";
             string link = getLink(content.Id, urlHelper, path);
 
             content.Links.Add(new HyperMediaLink() {
@@ -49,7 +49,7 @@ namespace RestNet5Api.Hypermedia.Enricher
         {
             lock (_lock){
                 var url = new {controller = path, id = id};
-                return new StringBuilder(urlHelper.Link("DefaultApi", url)).Replace("%2f", "/").ToString();
+                return new StringBuilder(urlHelper.Link("DefaultApi", url)).Replace("%2F", "/").Replace("?version=1", "").ToString();
             };
         }
     }
