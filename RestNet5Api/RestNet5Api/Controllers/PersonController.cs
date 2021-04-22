@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RestNet5Api.Business;
@@ -8,6 +9,7 @@ using RestNet5Api.Hypermedia.Filters;
 namespace RestNet5Api.Controllers
 {
     [ApiController]
+    [Authorize("Bearer")]
     [ApiVersion("1")]
     [Route("v{version:apiVersion}/pessoa")]
     public class PersonController : ControllerBase

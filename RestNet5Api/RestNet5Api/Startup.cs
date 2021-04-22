@@ -17,6 +17,15 @@ using RestNet5Api.Repository.Generic;
 using Microsoft.Net.Http.Headers;
 using RestNet5Api.Hypermedia.Filters;
 using RestNet5Api.Hypermedia.Enricher;
+using RestNet5Api.Services.Implementations;
+using RestNet5Api.Services;
+using RestNet5Api.Repository.Implementations;
+using RestNet5Api.Configurations;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RestNet5Api
 {
@@ -38,7 +47,29 @@ namespace RestNet5Api
             // if(Environment.IsDevelopment()){
             //     MigrateDatabase(Configuration.GetConnectionString("MySQLConnection"));
             // }
-                
+            var tokenConfigurations = new TokenConfiguration();
+            new ConfigureFromConfigurationOptions<TokenConfiguration>(Configuration.GetSection("TokenConfigurations")).Configure(tokenConfigurations);
+
+            services.AddSingleton(tokenConfigurations);
+            services.AddAuthentication(opt => {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(opt => {
+                opt.TokenValidationParameters = new TokenValidationParameters {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = tokenConfigurations.Issuer,
+                    ValidAudience = tokenConfigurations.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenConfigurations.Secret))
+                };
+            });
+            
+            services.AddAuthorization(auth => {
+                auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder().AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme).RequireAuthenticatedUser().Build());
+            });
+
             services.AddCors(p => p.AddDefaultPolicy(builder => {
                 builder.AllowAnyOrigin()
                 .AllowAnyMethod()
@@ -49,6 +80,9 @@ namespace RestNet5Api
             services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
             services.AddScoped<IBookBusiness, BookBusinessImplementation>();
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
+            services.AddScoped<ILoginBusiness, LoginBusinessImplementation>();
+            services.AddTransient<ITokenService, TokenService>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddDbContext<MySqlContext>(options => options.UseMySql(Configuration.GetConnectionString("MySQLConnection"), new MySqlServerVersion(new Version(5,7))));
             
