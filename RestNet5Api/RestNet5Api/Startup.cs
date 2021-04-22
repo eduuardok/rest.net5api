@@ -39,6 +39,11 @@ namespace RestNet5Api
             //     MigrateDatabase(Configuration.GetConnectionString("MySQLConnection"));
             // }
                 
+            services.AddCors(p => p.AddDefaultPolicy(builder => {
+                builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            }));
 
             services.AddControllers();
             services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
@@ -62,7 +67,12 @@ namespace RestNet5Api
             services.AddApiVersioning();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "RestNet5Api", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "RestNet5Api", Version = "v1", Description = "API Estudo .NET Core 5", 
+                    Contact = new OpenApiContact() {
+                        Name = "Eduardo Luna",
+                        Url = new Uri("https://github.com/eduuardok")
+                    } 
+                });
             });
         }
 
@@ -78,7 +88,11 @@ namespace RestNet5Api
 
             //app.UseHttpsRedirection();
 
+
+            
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthorization();
 
